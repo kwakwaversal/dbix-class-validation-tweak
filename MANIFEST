@@ -21,6 +21,7 @@ t/lib/DBIC/Test/Schema.pm
 t/lib/DBIC/Test/Schema/Test.pm
 t/lib/Validator.pm
 t/lib/ValidatorWithoutCheck.pm
+t/lib/FormValidator/Simple/Plugin/FilterTest.pm
 t/manifest.t
 t/pod_coverage.t
 t/pod_spelling.t
