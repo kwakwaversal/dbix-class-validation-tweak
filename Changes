@@ -1,5 +1,8 @@
 Revision history for DBIx::Class::Validation
 
+0.02006 Tue Jun 25 10:51:55 2013
+    - Added validation_filter support for FormValidator::Simple (KWAKWA)
+
 0.02005 Sat Jul 11 11:20:03 2009
     - Fix bug that skipped validation when setting values while doing an
         update() like this: $row->update($hashref) (Sergio Salvi) (RT#47709)

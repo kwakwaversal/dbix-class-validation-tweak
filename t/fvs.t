@@ -5,17 +5,18 @@ use warnings;
 
 BEGIN {
     use lib 't/lib';
-    use DBIC::Test tests => 17;
+    use DBIC::Test tests => 19;
 }
 
 my $schema = DBIC::Test->init_schema;
 my $row;
 
 my $profile = [
-	name => [ 'NOT_BLANK', ['LENGTH', 4, 10] ],
+	name => [ 'NOT_BLANK', ['LENGTH', 4, 10], 'LOWERCASE' ],
 ];
 
 DBIC::Test::Schema::Test->validation_profile($profile);
+DBIC::Test::Schema::Test->validation_module->import(qw/FilterTest/);
 Class::C3->reinitialize();
 
 $row = eval{  $schema->resultset('Test')->create({name => ''}) };
@@ -46,6 +47,18 @@ DBIC::Test::Schema::Test->validation_auto(0);
 Class::C3->reinitialize();
 $row = eval{ $schema->resultset('Test')->create({name => 'qwertyqwerty'}) };
 is $row->name, 'qwertyqwerty', 'validation is off';
+
+# validation filter
+DBIC::Test::Schema::Test->validation_auto(1);
+DBIC::Test::Schema::Test->validation_filter(1);
+Class::C3->reinitialize();
+$row = eval{ $schema->resultset('Test')->create({name => 'TEST', email => 'test@test.org'}); };
+is $row->name, 'test', 'filters applied';
+
+DBIC::Test::Schema::Test->validation_filter(0);
+Class::C3->reinitialize();
+$row = eval{ $schema->resultset('Test')->create({name => 'TEST', email => 'test@test.org'}) };
+is $row->name, 'TEST', 'no filters applied';
 
 # validation changes all
 DBIC::Test::Schema::Test->validation(

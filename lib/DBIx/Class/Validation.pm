@@ -2,7 +2,7 @@
 package DBIx::Class::Validation;
 use strict;
 use warnings;
-our $VERSION = '0.02005';
+our $VERSION = '0.02006';
 
 BEGIN {
     use base qw/DBIx::Class Class::Accessor::Grouped/;
@@ -148,7 +148,8 @@ UPDATEs and INSERTs modify your data to that of the values returned by
 your validation modules C<check> method. This is primarily meant for use
 with L<"Data::FormValidator"> but may be used with any validation module
 that returns a results object that supports a C<valid()> method just
-like L<"Data::FormValidator::Results">.
+like L<"Data::FormValidator::Results">. (The C<valid()> method must return
+an ARRAY reference or HASH reference.)
 
 B<Filters modify your data, so use them carefully>.
 
@@ -178,7 +179,8 @@ sub validate {
 
     if ($result->success) {
         if ($self->validation_filter && $result->can('valid')) {
-            $self->$_($result->valid($_)) for ($result->valid);
+            $self->$_($result->valid($_))
+              for (ref $result->valid eq 'HASH' ? keys %{$result->valid} : $result->valid);
         };
         return $result;
     } else {
@@ -237,6 +239,8 @@ Christopher Laco <claco@cpan.org>
 John Napiorkowski <jjn1056@yahoo.com>
 
 Sergio Salvi <sergio@developerl.com>
+
+Paul Williams <kwakwa@cpan.org>
 
 =head1 LICENSE
 

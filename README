@@ -91,7 +91,8 @@ METHODS
     your validation modules "check" method. This is primarily meant for use
     with "Data::FormValidator" but may be used with any validation module
     that returns a results object that supports a "valid()" method just like
-    "Data::FormValidator::Results".
+    "Data::FormValidator::Results". (The "valid()" method must return an ARRAY
+    reference or HASH reference.)
 
     Filters modify your data, so use them carefully.
 
